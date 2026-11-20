@@ -1,60 +1,58 @@
 package com.plurasight;
-import java.util.Collection;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        //game will run till stopGame become true
-        boolean stopGame = false;
-        do {
-            //Interface of the game
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("******** BLACKJACK ********");
-            System.out.println("Enter player 1 name:");
-            String firstPlayer = scanner.next();
-            System.out.println("Enter player 2 name:");
-            String secondPlayer = scanner.next();
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.print("Enter player 1's name: ");
+        String firstPlayer = scanner.nextLine().trim();
+
+        System.out.print("Enter player 2's name: ");
+        String secondPlayer = scanner.nextLine().trim();
+
+        String playAgain;
+
+        do {
             Deck deck = new Deck();
+            deck.shuffle();
+
             Hand firstHand = new Hand();
             Hand secondHand = new Hand();
-            //Pass
-            firstHand.deal(deck.shuffle());
-            firstHand.deal(deck.shuffle());
+
+            firstHand.deal(deck.deal());
+            secondHand.deal(deck.deal());
+            firstHand.deal(deck.deal());
+            secondHand.deal(deck.deal());
+
             int player1Total = firstHand.getValue();
-            //second hand
-            secondHand.deal(deck.shuffle());
-            secondHand.deal(deck.shuffle());
             int player2Total = secondHand.getValue();
 
+            System.out.println("\n" + firstPlayer + "'s hand:");
+            for (Card card : firstHand.cards) {
+                System.out.println(card.suit + " - " + card.value + " points");
+            }
+            System.out.println("Total: " + player1Total);
 
-            System.out.println(firstHand.getSize());
-            System.out.println(secondHand.getSize());
-            System.out.println(firstPlayer + "'s cards:\n" + firstHand.cards.get(0).suit
-                    + " _ " + firstHand.cards.get(0).value + " Points");
-            System.out.println(firstHand.cards.get(1).suit
-                    + " _ " + firstHand.cards.get(1).value + " Points\nTotal:" + player1Total);
+            System.out.println("\n" + secondPlayer + "'s hand:");
+            for (Card card : secondHand.cards) {
+                System.out.println(card.suit + " - " + card.value + " points");
+            }
+            System.out.println("Total: " + player2Total);
 
-            System.out.println(secondPlayer + "'s cards:\n" + secondHand.cards.get(0).suit
-                    + " _ " + secondHand.cards.get(0).value + " Points");
-            System.out.println(secondHand.cards.get(1).suit
-                    + " _ " + secondHand.cards.get(1).value + " Points\nTotal:" + player2Total);
-
-
-            if (player1Total > player2Total) {
-                System.out.println(firstPlayer + " wins with " + player1Total + " points!");
-            } else if (player2Total > player1Total) {
-                System.out.println(secondPlayer + " wins with " + player2Total + " points!");
+            if (player1Total > 21 && player2Total > 21) {
+                System.out.println("\nBoth players busted!");
+            } else if (player2Total > 21 || (player1Total <= 21 && player1Total > player2Total)) {
+                System.out.println("\n" + firstPlayer + " wins with " + player1Total + " points!");
+            } else if (player1Total > 21 || player2Total > player1Total) {
+                System.out.println("\n" + secondPlayer + " wins with " + player2Total + " points!");
             } else {
-                System.out.println("It’s a tie!....");
+                System.out.println("\nIt's a tie!");
             }
 
-            System.out.println("Play again? (Y/N):");
-            String userAnswer = scanner.next();
-            if(userAnswer.equalsIgnoreCase("n")) stopGame = true;
-
-        }while(!stopGame);
-
+            System.out.print("\nPlay again? (y/n): ");
+            playAgain = scanner.nextLine().trim();
+        } while (playAgain.equalsIgnoreCase("y"));
     }
-
 }

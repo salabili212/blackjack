@@ -68,9 +68,12 @@ public class Deck {
 
         }
     }
-    public Card shuffle(){
+    public void shuffle() {
         Collections.shuffle(cards);
-        return cards.get(0);
+    }
+
+    public Card deal() {
+        return cards.remove(cards.size() - 1);
     }
 
 }
